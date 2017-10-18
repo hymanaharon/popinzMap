@@ -14,7 +14,7 @@ var sitterArray = [{name:"Barbie", address:{number:"7", street:"Ben Baba", neigh
 
 
 function initMap() {
-
+// create map and center around parent location
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 15,
     center: parent.address.latlong
@@ -26,7 +26,6 @@ function initMap() {
 
     });
   });
-
   // Add a marker clusterer to manage the markers.
   var markerCluster = new MarkerClusterer(map, markers,
       {imagePath: 'markerclusterer/images/popinz'});
