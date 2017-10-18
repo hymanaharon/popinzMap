@@ -1,86 +1,33 @@
 
-      var parent = {name:"Aharon", address:{number:"1", street:"Ben Tabai", neighbourhood:"San Simon", city:"Jerusalem"}, phone:"012 345 6789"};
-      var sitterArray = [{name:"Barbie", address:{number:"7", street:"Ben Baba", neighbourhood:"San Simon", city:"Jerusalem"}, phone:"012 345 6789"},
-     {name:"Candy", address:{number:"10", street:"Bnei Betera", neighbourhood:"San Simon", city:"Jerusalem"}, phone:"012 345 6789"},
-       {name:"Dave", address:{number:"15", street:"HaPalmach st", neighbourhood:"Katamon", city:"Jerusalem"}, phone:"012 345 6789"},
-       {name:"Erin", address:{number:"24", street:"Hashayarot", neighbourhood:"Katamon", city:"Jerusalem"}, phone:"012 345 6789"},
-       {name:"Fran", address:{number:"42", street:"Bilu", neighbourhood:"Katamon", city:"Jerusalem"}, phone:"012 345 6789"},
-       {name:"Gregg", address:{number:"5", street:"Bostanai", neighbourhood:"Katamon", city:"Jerusalem"}, phone:"012 345 6789"},
-       {name:"Hannah", address:{number:"7", street:"Negba", neighbourhood:"Katamon", city:"Jerusalem"}, phone:"012 345 6789"},
-       {name:"Ivy", address:{number:"71", street:"HaPortsim", neighbourhood:"Katamon", city:"Jerusalem"}, phone:"012 345 6789"},
-       {name:"Jason", address:{number:"13", street:"HaPalmach", neighbourhood:"Har Nof", city:"Jerusalem"}, phone:"012 345 6789"}];
-      var parentNeighbourhood = parent.address.neighbourhood + ", " + parent.address.city;
-      var sitterMarkerArray = [];
-      var geocoder;
-      var map;
-      /*for (var i = 0; i<sitterArray.length; i++){
-        sitterMarkerArray.push(sitterArray[i].address.neighbourhood + ", " + sitterArray[i].address.city);
+//parent and sitterArray in reality would be from a backend call with latlong being geocoded serverside
 
-      }*/
+var parent = {name:"Aharon", address:{number:"1", street:"Ben Tabai", neighbourhood:"San Simon", city:"Jerusalem", latlong:{lat: 31.758820, lng: 35.204465}}, phone:"012 345 6789"};
+var sitterArray = [{name:"Barbie", address:{number:"7", street:"Ben Baba", neighbourhood:"San Simon", city:"Jerusalem", latlong:{lat: 31.758820, lng: 35.204465}}, phone:"012 345 6789"},
+     {name:"Candy", address:{number:"10", street:"Bnei Betera", neighbourhood:"San Simon", city:"Jerusalem", latlong:{lat: 31.758820, lng: 35.204465}}, phone:"012 345 6789"},
+       {name:"Dave", address:{number:"15", street:"HaPalmach st", neighbourhood:"Katamon", city:"Jerusalem", latlong:{lat: 31.762251, lng: 35.211552}}, phone:"012 345 6789"},
+       {name:"Erin", address:{number:"24", street:"Hashayarot", neighbourhood:"Katamon", city:"Jerusalem", latlong:{lat: 31.762251, lng: 35.211552}}, phone:"012 345 6789"},
+       {name:"Fran", address:{number:"42", street:"Bilu", neighbourhood:"Katamon", city:"Jerusalem", latlong:{lat: 31.762251, lng: 35.211552}}, phone:"012 345 6789"},
+       {name:"Gregg", address:{number:"5", street:"Bostanai", neighbourhood:"Katamon", city:"Jerusalem", latlong:{lat: 31.762251, lng: 35.211552}}, phone:"012 345 6789"},
+       {name:"Hannah", address:{number:"7", street:"Negba", neighbourhood:"Katamon", city:"Jerusalem", latlong:{lat: 31.762251, lng: 35.211552}}, phone:"012 345 6789"},
+       {name:"Ivy", address:{number:"71", street:"HaPortsim", neighbourhood:"Katamon", city:"Jerusalem", latlong:{lat: 31.762251, lng: 35.211552}}, phone:"012 345 6789"},
+       {name:"Jason", address:{number:"13", street:"HaPalmach", neighbourhood:"Har Nof", city:"Jerusalem", latlong:{lat: 31.784846, lng: 35.173300}}, phone:"012 345 6789"}];
+
+
 function initMap() {
-              /*var geocoder = new google.maps.Geocoder.geocode(( { 'address': parentNeighbourhood}, function(results, status) {
-      if (status == 'OK') {
-        map.setCenter(results[0].geometry.location);
-        var marker = new google.maps.Marker({
-            map: map,
-            position: results[0].geometry.location
-        });
-      } else {
-        alert('Geocode was not successful for the following reason: ' + status);
-      }
-    });*/
-    var markers;
-geocoder = new google.maps.Geocoder();
-var latlngParent = geocoder.geocode({ 'address': parentNeighbourhood}, function(results, status) {
-      if (status == 'OK') {
-        map.setCenter(results[0].geometry.location);
-        var marker = new google.maps.Marker({
-            map: map,
-            center: results[0].geometry.location
-        });
-      } else {
-        alert('Geocode was not successful for the following reason: ' + status);
-      }
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 15,
+    center: parent.address.latlong
+  });
+//add markers to map from sitter array
+  var markers = sitterArray.map(function(location, i) {
+    return new google.maps.Marker({
+      position: sitterArray[i].address.latlong,
+
     });
-    var mapOptions = {
-      zoom: 15,
-      center: latlngParent
+  });
 
-    }
-    map = new google.maps.Map(document.getElementById('map'), mapOptions);
-    for (var i = 0; i<sitterArray.length; i++){
-      sitterMarkerArray.push(sitterArray[i].address.neighbourhood + ", " + sitterArray[i].address.city);
+  // Add a marker clusterer to manage the markers.
+  var markerCluster = new MarkerClusterer(map, markers,
+      {imagePath: 'markerclusterer/images/popinz'});
 }
-for (var j=0; j<sitterMarkerArray.length; j++){
-      var latlngsitter = geocoder.geocode({ 'address': sitterMarkerArray[j]}, function(results, status) {
-            if (status == 'OK') {
-                  marker = new google.maps.Marker({
-                  map: map,
-                  position: results[0].geometry.location
-
-              });
-            } else {
-              alert('Geocode was not successful for the following reason: ' + status);
-            }
-
-          });
-    }
-    /*var markerCluster = new MarkerClusterer(map, markers,
-      {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});*/
-  }
-
-
-/*function initMap() {
-              var Jerusalem = {lat: -25.363, lng: 131.044};
-              var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 14,
-                center: Jerusalem
-              });
-              var marker = new google.maps.Marker({
-                position: Jerusalem,
-                map: map
-              });
-            }
-*/
-console.log(parentNeighbourhood);
-console.log(sitterMarkerArray);
